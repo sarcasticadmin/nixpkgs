@@ -33,9 +33,9 @@ buildPythonPackage rec {
     mock
     twisted
   ];
-  checkPhase = ''
-    trial -j$NIX_BUILD_CORES wormhole_mailbox_server
-  '';
+  #checkPhase = ''
+  #  trial -j$NIX_BUILD_CORES wormhole_mailbox_server
+  #'';
 
   meta = with lib; {
     description = "Securely transfer data between computers";
