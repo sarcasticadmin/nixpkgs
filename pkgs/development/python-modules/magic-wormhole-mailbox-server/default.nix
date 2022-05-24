@@ -31,7 +31,7 @@ buildPythonPackage rec {
   checkInputs = [
     treq
     mock
-    twisted
+#    twisted
   ];
   #checkPhase = ''
   #  trial -j$NIX_BUILD_CORES wormhole_mailbox_server
