@@ -11761,6 +11761,8 @@ with pkgs;
 
   oxefmsynth = callPackage ../applications/audio/oxefmsynth { };
 
+  oxide-cli = callPackage ../tools/admin/oxide-rs { };
+  
   oxidized = callPackage ../tools/admin/oxidized { };
 
   oxipng = callPackage ../tools/graphics/oxipng { };
