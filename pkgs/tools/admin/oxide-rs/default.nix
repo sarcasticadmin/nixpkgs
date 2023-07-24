@@ -8,7 +8,7 @@ rustPlatform.buildRustPackage rec {
     owner = "oxidecomputer";
     repo = "oxide.rs";
     rev = "b5d5a8ccce98b9366a26fc133574579379dbcc0c";
-    hash = "";
+    hash = "sha256-Vt6tObGaKbthkx3Rc3QN5AmuDQgjko/XS8gEz6fHziE=";
   };
 
   cargoHash = "";
