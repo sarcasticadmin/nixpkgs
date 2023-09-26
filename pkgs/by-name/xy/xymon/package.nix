@@ -8,7 +8,11 @@
 , rrdtool
 , openssl
 , libtirpc
+, lzo
+, lz4
 , ntirpc
+, rpcsvc-proto
+, mtr
 , fping
 , breakpointHook
 }:
@@ -19,15 +23,27 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ breakpointHook ];
 
-  buildInputs = [ sqlite pcre zlib c-ares rrdtool openssl libtirpc ntirpc fping ];
+  buildInputs = [ sqlite pcre zlib c-ares rrdtool openssl libtirpc lzo lz4 fping ];
 
   XYMONUSER="nobody";
+  env.XYMONHOME="$(out)";
   #USEXYMONPING="y";
   #configurePhase = ''
   #  ./configure --server --fping ${fping}/bin/fping
   #'';
+  env.NIX_CFLAGS_COMPILE = toString [ "-I${libtirpc.dev}/include/tirpc" ];
+
   configurePhase = ''
-    ./configure --server
+    ./configure --server --fping ${fping}/bin/fping
+  '';
+
+  installPhase = ''
+    runHook preInstall
+    mkdir -p $out/bin
+    cp common/{xymongrep,xymondigest,xymon,xymoncmd,xymonlaunch,xymoncfg} $out/bin/
+    mkdir -p $out/lib
+    cp lib/*.a $out/lib/
+    runHook postInstall
   '';
 
   src = fetchsvn {
