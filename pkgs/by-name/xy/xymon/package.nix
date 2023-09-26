@@ -43,6 +43,11 @@ stdenv.mkDerivation rec {
     cp common/{xymongrep,xymondigest,xymon,xymoncmd,xymonlaunch,xymoncfg} $out/bin/
     mkdir -p $out/lib
     cp lib/*.a $out/lib/
+    mkdir -p $out/man/{man1,man5,man7,man8}
+    cp common/*.1 $out/man/man1/
+    cp common/*.5 $out/man/man5/
+    cp common/*.7 $out/man/man7/
+    cp common/*.8 $out/man/man8/
     runHook postInstall
   '';
 
