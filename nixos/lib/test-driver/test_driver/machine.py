@@ -638,7 +638,7 @@ class Machine:
                 capture_output=True, text=True
             )
             self.log("inside the try after subproces")
-            self.log("ret: " + str(result.returncode + " stdout: " + result.stdout + " stderr: " + result.stderr)
+            self.log("ret: " + str(result.returncode) + " stdout: " + result.stdout + " stderr: " + result.stderr)
             self.log(str(self.connected))
             # allow users to cancel this command without breaking the test
         except KeyboardInterrupt:
