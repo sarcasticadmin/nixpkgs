@@ -25,6 +25,8 @@ stdenv.mkDerivation rec {
   '';
 
   buildInputs = [ openssl readline ];
+  
+  progatedBuildInputs = [ readline ];
 
   hardeningEnable = [ "pie" ];
 
