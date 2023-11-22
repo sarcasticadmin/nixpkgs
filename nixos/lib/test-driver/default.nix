@@ -10,6 +10,7 @@
 , ruff
 , tesseract4
 , vde2
+, readline
 , extraPythonPackages ? (_ : [])
 , nixosTests
 }:
@@ -27,6 +28,7 @@ python3Packages.buildPythonApplication {
     python3Packages.ptpython
     qemu_pkg
     socat
+    readline
     vde2
   ]
     ++ (lib.optionals enableOCR [ imagemagick_light tesseract4 ])
