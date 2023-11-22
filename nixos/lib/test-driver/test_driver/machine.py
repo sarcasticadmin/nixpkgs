@@ -634,11 +634,11 @@ class Machine:
             self.log("inside the try")
             result = subprocess.run(
                 ["socat", address, f"FD:{self.shell.fileno()}"],
-                pass_fds=[self.shell.fileno()],
-                capture_output=True, text=True
+                pass_fds=[self.shell.fileno()]
             )
             self.log("inside the try after subproces")
-            self.log("ret: " + str(result.returncode) + " stdout: " + result.stdout + " stderr: " + result.stderr)
+            #self.log("ret: " + str(result.returncode) + " stdout: " + result.stdout + " stderr: " + result.stderr)
+            self.log("ret: " + str(result.returncode))
             self.log(str(self.connected))
             # allow users to cancel this command without breaking the test
         except KeyboardInterrupt:
