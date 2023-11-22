@@ -636,11 +636,11 @@ class Machine:
                 pass_fds=[self.shell.fileno()],
             )
             self.log("inside the try after subproces")
-            self.log(self.shell.connected)
+            self.log(self.connected)
             # allow users to cancel this command without breaking the test
         except KeyboardInterrupt:
             self.log("inside the except keyboardinterrupt")
-            self.shell.connected = False
+            self.connected = False
             pass
 
     def console_interact(self) -> None:
