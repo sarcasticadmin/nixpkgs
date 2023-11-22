@@ -622,6 +622,7 @@ class Machine:
         Killing the interactive session with `Ctrl-d` or `Ctrl-c` also ends
         the guest session.
         """
+        self.log("before connect" + str(self.connected))
         self.connect()
 
         if address is None:
@@ -631,18 +632,21 @@ class Machine:
         assert self.shell
         try:
             self.log("inside the try")
-            self.log(str(self.connected))
-            subprocess.run(
+            result = subprocess.run(
                 ["socat", address, f"FD:{self.shell.fileno()}"],
                 pass_fds=[self.shell.fileno()],
+                capture_output=True, text=True
             )
             self.log("inside the try after subproces")
+            self.log("ret: " + str(result.returncode + " stdout: " + result.stdout + " stderr: " + result.stderr)
             self.log(str(self.connected))
             # allow users to cancel this command without breaking the test
         except KeyboardInterrupt:
             self.log("inside the except keyboardinterrupt")
             self.connected = False
+            self.log(str(self.connected))
             pass
+
 
     def console_interact(self) -> None:
         """
