@@ -630,12 +630,15 @@ class Machine:
 
         assert self.shell
         try:
+            self.log("inside the try")
             subprocess.run(
                 ["socat", address, f"FD:{self.shell.fileno()}"],
                 pass_fds=[self.shell.fileno()],
             )
+            self.log("inside the try after subproces")
             # allow users to cancel this command without breaking the test
         except KeyboardInterrupt:
+            self.log("inside the except keyboardinterrupt")
             pass
 
     def console_interact(self) -> None:
