@@ -632,12 +632,12 @@ class Machine:
         assert self.shell
         try:
             self.log("inside the try")
+            self.log("address: " + str(address) + "fd: " + str(self.shell.fileno()))
             result = subprocess.run(
                 ["socat", address, f"FD:{self.shell.fileno()}"],
                 pass_fds=[self.shell.fileno()]
             )
             self.log("inside the try after subproces")
-            self.log("address: " + str(address) + "fd: " + str(self.shell.fileno()))
             #self.log("ret: " + str(result.returncode) + " stdout: " + result.stdout + " stderr: " + result.stderr)
             self.log("ret: " + str(result.returncode))
             self.log(str(self.connected))
