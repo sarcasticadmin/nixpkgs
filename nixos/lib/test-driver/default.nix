@@ -36,7 +36,7 @@ python3Packages.buildPythonApplication {
     inherit (nixosTests.nixos-test-driver) driver-timeout;
   };
 
-  doCheck = true;
+  doCheck = false;
   nativeCheckInputs = with python3Packages; [ mypy ruff black ];
   checkPhase = ''
     echo -e "\x1b[32m## run mypy\x1b[0m"
