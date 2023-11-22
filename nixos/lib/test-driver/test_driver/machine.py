@@ -634,7 +634,7 @@ class Machine:
             self.log("inside the try")
             self.log("address: " + str(address) + "fd: " + str(self.shell.fileno()))
             result = subprocess.run(
-                ["socat", "-d4", address, f"FD:{self.shell.fileno()}"],
+                ["socat", address, f"FD:{self.shell.fileno()}"],
                 pass_fds=[self.shell.fileno()]
             )
             self.log("inside the try after subproces")
