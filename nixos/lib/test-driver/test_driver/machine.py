@@ -626,7 +626,7 @@ class Machine:
         self.connect()
 
         if address is None:
-            address = "READLINE,prompt=$ "
+            address = "READLINE,ignoreeof,prompt=$ "
             self.log("Terminal is ready (there is no initial prompt):")
 
         assert self.shell
@@ -634,7 +634,7 @@ class Machine:
             self.log("inside the try")
             self.log("address: " + str(address) + "fd: " + str(self.shell.fileno()))
             result = subprocess.run(
-                ["socat", "-d4", "ignoreeof", address, f"FD:{self.shell.fileno()}"],
+                ["socat", "-d4", address, f"FD:{self.shell.fileno()}"],
                 pass_fds=[self.shell.fileno()]
             )
             self.log("inside the try after subproces")
