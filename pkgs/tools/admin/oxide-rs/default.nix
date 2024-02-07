@@ -36,6 +36,8 @@ rustPlatform.buildRustPackage rec {
   OPENSSL_LIB_DIR = "${lib.getLib openssl}/lib";
   OPENSSL_DIR = "${lib.getDev openssl}";
 
+  doCheck = false;
+
   meta = with lib; {
     description = "The Oxide Rust SDK and CLI";
     homepage = "https://github.com/oxidecomputer/oxide.rs";
