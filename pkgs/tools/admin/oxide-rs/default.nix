@@ -10,6 +10,8 @@ rustPlatform.buildRustPackage rec {
     #rev = "b5d5a8ccce98b9366a26fc133574579379dbcc0c";
     rev = "v${version}";
     hash = "sha256-Zkvrc7Poj3Btz2Dz0QP5lrsnHm3KW1/FfmOezbXXQ/8=";
+    leaveDotGit = true;
+    deepClone = true;
   };
 
   buildInputs = [
@@ -29,7 +31,7 @@ rustPlatform.buildRustPackage rec {
     };
   };
 
-  patches = [./oxide-git-version.patch];
+  #patches = [./oxide-git-version.patch];
 
   # Needed to get openssl-sys to use pkg-config.
   OPENSSL_NO_VENDOR = 1;
