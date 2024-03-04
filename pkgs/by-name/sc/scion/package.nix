@@ -26,18 +26,19 @@ buildGoModule {
   src = fetchFromGitHub {
     owner = "scionproto";
     repo = "scion";
-    rev = "v${version}";
-    hash = "sha256-8yXjEDo1k0+7O0gx2acAZMrG/r+iePfNCG+FolCSKwI=";
+    #rev = "v${version}";
+    rev = "4ef18b4160c5b3be4f48b51aea57164a54a64ce9";
+    hash = "sha256-0JRxxXFPN/ikicMeMAPBcq7Lu/mGcWER8kuD1a44cuM=";
   };
 
   vendorHash = "sha256-4nTp6vOyS7qDn8HmNO0NGCNU7wCb8ww8a15Yv3MPEq8=";
 
   excludedPackages = [ "acceptance" "demo" "tools" "pkg/private/xtest/graphupdater" ];
 
-  postConfigure = ''
-    # This test needs docker, so lets skip it
-    ${skipTest 1 "TestOpensslCompatible" "scion-pki/trcs/sign_test.go"}
-  '';
+  #postConfigure = ''
+  #  # This test needs docker, so lets skip it
+  #  ${skipTest 1 "TestOpensslCompatible" "scion-pki/trcs/sign_test.go"}
+  #'';
 
   doCheck = true;
 
