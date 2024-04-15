@@ -6,9 +6,12 @@
 , installShellFiles
 }:
 
-buildGoModule rec {
+let
   pname = "pat";
-  version = "0.15.1";
+  version = "0.16.0";
+in
+buildGoModule {
+  inherit pname version;
 
   src = fetchFromGitHub {
     owner = "la5nta";
