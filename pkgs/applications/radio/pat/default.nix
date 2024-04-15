@@ -8,7 +8,7 @@
 
 let
   pname = "pat";
-  version = "0.16.0";
+  version = "0.15.1";
 in
 buildGoModule {
   inherit pname version;
