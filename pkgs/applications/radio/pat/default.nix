@@ -8,7 +8,7 @@
 
 let
   pname = "pat";
-  version = "0.15.1";
+  version = "0.16.0";
 in
 buildGoModule {
   inherit pname version;
@@ -17,10 +17,10 @@ buildGoModule {
     owner = "la5nta";
     repo = "pat";
     rev = "v${version}";
-    hash = "sha256-wNWqqGc4mf3z0ejMpU+jWhqCbjNJ2b6+pbBjDYKwKK8=";
+    hash = "sha256-JlqYdsAXs3pS5i59tiel+gxQsTrn5mUs0qLzjHxGZU0=";
   };
 
-  vendorHash = "sha256-m5yb6+TfRApw0ZROx9ZA3RPiKV+1DHo/73CNQpIfMlU=";
+  vendorHash = "sha256-Z6p0wiOY5l++nch64BJWGXleBgUNecTDm+yVCnmXvtU=";
 
   ldflags = [ "-s" "-w" ];
 
