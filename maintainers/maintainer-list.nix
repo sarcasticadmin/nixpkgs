@@ -441,6 +441,13 @@
     github = "a-camarillo";
     githubId = 58638902;
   };
+  a-jay98 = {
+    name = "Ali Jamadi";
+    email = "ali@jamadi.me";
+    matrix = "@a.jamadi:matrix.org";
+    github = "a-jay98";
+    githubId = 23138252;
+  };
   acesyde = {
     name = "Pierre-Emmanuel Mercier";
     email = "acesyde@gmail.com";
