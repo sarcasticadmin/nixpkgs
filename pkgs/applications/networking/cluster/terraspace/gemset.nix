@@ -249,6 +249,16 @@
     };
     version = "0.16.2";
   };
+  mini_portile2 = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1q1f2sdw3y3y9mnym9dhjgsjr72sq975cfg5c4yx7gwv8nmzbvhk";
+      type = "gem";
+    };
+    version = "2.8.7";
+  };
   minitest = {
     groups = ["default"];
     platforms = [];
@@ -270,12 +280,12 @@
     version = "0.2.0";
   };
   nokogiri = {
-    dependencies = ["racc"];
+    dependencies = ["mini_portile2" "racc"];
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0878in5rj2vvxq5g8d3ac8jqqfrfrx0pg1jcw6kxavfp9b0x56vn";
+      sha256 = "1vz1ychq2fhfqjgqdrx8bqkaxg5dzcgwnah00m57ydylczfy8pwk";
       type = "gem";
     };
     version = "1.16.6";

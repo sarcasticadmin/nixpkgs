@@ -1,24 +1,11 @@
 { stdenv, lib, bundlerEnv, bundlerUpdateScript, makeWrapper, ruby }:
-let
-  rubyEnv = bundlerEnv {
-    inherit ruby;
-    name = "terraspace";
-    gemdir  = ./.;
-  };
-in stdenv.mkDerivation {
+
+bundlerEnv {
   pname = "terraspace";
-  version = (import ./gemset.nix).terraspace.version;
 
-  nativeBuildInputs = [ makeWrapper ];
-
-  dontUnpack = true;
-
-  installPhase = ''
-    mkdir -p $out/bin
-    makeWrapper ${rubyEnv}/bin/terraspace $out/bin/terraspace
-    wrapProgram $out/bin/terraspace \
-      --prefix PATH : ${lib.makeBinPath [ rubyEnv.ruby ]}
-  '';
+  inherit ruby;
+  name = "terraspace";
+  gemdir  = ./.;
 
   passthru.updateScript = bundlerUpdateScript "terraspace";
 
