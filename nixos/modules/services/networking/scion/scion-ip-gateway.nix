@@ -6,33 +6,55 @@ let
   globalCfg = config.services.scion;
   cfg = config.services.scion.scion-ip-gateway;
   toml = pkgs.formats.toml { };
+  json = pkgs.formats.json { };
   connectionDir = if globalCfg.stateless then "/run" else "/var/lib";
   defaultConfig = {
+    tunnel = {};
+    gateway = {
+      traffic_policy_file = "${trafficConfigFile}";
+    };
+  };
+  defaultTrafficConfig = {
     ASes = { };
     ConfigVersion = 9001;
   };
-  configFile = toml.generate "scion-ip-gateway.toml" (recursiveUpdate defaultConfig cfg.settings);
+  configFile = toml.generate "scion-ip-gateway.toml" (recursiveUpdate defaultConfig cfg.config);
+  trafficConfigFile = json.generate "scion-ip-gateway-traffic.json" (recursiveUpdate defaultTrafficConfig cfg.trafficConfig);
 in
 {
   options.services.scion.scion-ip-gateway = {
     enable = mkEnableOption "the scion-ip-gateway service";
-    settings = mkOption {
+    config = mkOption {
       default = { };
       type = toml.type;
       example = literalExpression ''
-        "ASes": {
-          "2-ffaa:0:b": {
-              "Nets": [
-                  "172.16.12.0/24"
-              ]
-          }
-    	},
-        "ConfigVersion": 9001 
+        {
+          tunnel = {
+            src_ipv4 = "172.16.100.1";
+          };
+        }
       '';
       description = ''
-        scion-ip-gateway configuration. Refer to
-        <https://docs.scion.org/en/latest/manuals/common.html>
-        for details on supported values.
+        scion-ip-gateway daemon configuration
+      '';
+    };
+    trafficConfig = mkOption {
+      default = { };
+      type = json.type;
+      example = literalExpression ''
+        {
+          ASes = {
+            "2-ffaa:0:b" = {
+              Nets = [
+                  "172.16.1.0/24"
+              ];
+            };
+          };
+          ConfigVersion = 9001;
+        }
+      '';
+      description = ''
+        scion-ip-gateway traffic configuration
       '';
     };
   };
@@ -45,7 +67,7 @@ in
       serviceConfig = {
         Type = "simple";
         Group = if (config.services.scion.scion-dispatcher.enable == true) then "scion" else null;
-        ExecStart = "${globalCfg.package}/bin/gc --config ${configFile}";
+        ExecStart = "${globalCfg.package}/bin/scion-ip-gateway --config ${configFile}";
         DynamicUser = true;
         Restart = "on-failure";
         KillMode = "control-group";
