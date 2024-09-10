@@ -151,6 +151,10 @@ in
     # Execute pingAll command on all instances
     succeed("${pingAll} >&2")
 
+    # Execute pings via scion-ip-gateway
+    scion04.succeed("ping 172.16.100.1 -c 1>&2")
+    scion05.succeed("ping 172.16.1.1 -c 1>&2")
+
     # Restart all scion services and ping again to test robustness
     succeed("systemctl restart scion-* >&2")
     succeed("${pingAll} >&2")
