@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchurl, bundlerEnv, ruby, makeWrapper, nixosTests }:
+{ lib, stdenv, fetchurl, bundlerEnv, bundlerUpdateScript, ruby, makeWrapper, nixosTests }:
 
 let
   version = "5.1.3";
@@ -43,6 +43,8 @@ in
     '';
 
     passthru.tests.redmine = nixosTests.redmine;
+
+    passthru.updateScript = bundlerUpdateScript "redmine";
 
     meta = with lib; {
       homepage = "https://www.redmine.org/";
