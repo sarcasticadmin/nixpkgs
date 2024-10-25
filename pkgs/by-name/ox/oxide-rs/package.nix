@@ -16,10 +16,10 @@ rustPlatform.buildRustPackage {
   version = "0.7.0";
 
   src = fetchFromGitHub {
-    owner = "djacu";
+    owner = "sarcasticadmin";
     repo = "oxide.rs";
-    rev = "2fd0e64a68cf8abe06dcca97dae2661d90efabe5";
-    hash = "sha256-MJCIalWNcfio9w7BZpUkOepewxaTDMzzx0k+gsRwyC0=";
+    rev = "fe189c66bdab4e857176b9d430f7bc35d8bb167a";
+    hash = "sha256-qyLvb/86wTycNWnMfBrfAhTvrZ5KoxbPsqY3taqSa6o=";
     leaveDotGit = true;
   };
 
