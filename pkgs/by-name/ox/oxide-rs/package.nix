@@ -18,8 +18,10 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "oxidecomputer";
     repo = "oxide.rs";
-    rev = "v${version}";
-    hash = "sha256-NtTXpXDYazcXilQNW455UDkqMCFzFPvTUkbEBQsWIDo=";
+    #rev = "v${version}";
+    rev = "05596baf0cda85f2d20f29b4c6e94f29df86dcea";
+    hash = "sha256-bqTPPWg+Q9jnWj6aVcgTCphz1UWh7V04+Vf3RbFLuA4=";
+    #hash = "sha256-NtTXpXDYazcXilQNW455UDkqMCFzFPvTUkbEBQsWIDo=";
     # leaveDotGit is necessary because `build.rs` expects git information which
     # is used to write a `built.rs` file which is read by the CLI application
     # to display version information.
@@ -29,14 +31,12 @@ rustPlatform.buildRustPackage rec {
   cargoLock = {
     lockFile = ./Cargo.lock;
     outputHashes = {
-      "oxnet-0.1.0" = "sha256-RFTNKLR4JrNs09De8K+M35RDk/7Nojyl0B9d14O9tfM=";
+      "oxnet-0.1.0" = "sha256-DZBJKddDSx1xAlDZajOuqwqQl06lh+eNxG0pe2uWEU8=";
       "thouart-0.1.0" = "sha256-GqSHyhDCqQCC8dCvXzsn2WMcNKJxJWXrTcR38Wr3T1s=";
+      "progenitor-0.8.0" = "sha256-pgKzPPUheqkE0LM4CUAIOUb9A2GSFnaVGeLInvC80Wg=";
+      "typify-0.2.0" = "sha256-Gqa2CwICMC4ZlKytbX3afsBODE1581NXImoGDCf5GoI=";
     };
   };
-
-  cargoPatches = [
-    ./0001-use-crates-io-over-git-dependencies.patch
-  ];
 
   cargoBuildFlags = [
     "--package=oxide-cli"
