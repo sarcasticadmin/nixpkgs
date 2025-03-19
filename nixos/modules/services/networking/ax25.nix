@@ -16,21 +16,23 @@ let
     mkOption
     ;
 
-  cfg = config.services.ax25;
+  cfg = config.services.ax25.kissAttach;
 
   ax25ToolsPkg = cfg.package;
 
   kissScript = pkgs.writeScript "kissScript" ''
     #!${pkgs.runtimeShell}
+    # This daemons so we should be all set
     ${ax25ToolsPkg}/bin/kissattach ${cfg.tty} ${cfg.port}
+    # Post start script instead
     ${ax25ToolsPkg}/bin/kissparms -p ${cfg.port} ${cfg.extraKISSParams}
   '';
 in
 {
 
   options = {
-    services.ax25 = {
-      enable = mkEnableOption (lib.mdDoc "ax25 init tnc");
+    services.ax25.kissAttach = {
+      enable = mkEnableOption (lib.mdDoc "ax25 kiss attach to tnc");
 
       package = mkOption {
         type = types.package;
