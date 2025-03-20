@@ -18,15 +18,6 @@ let
 
   cfg = config.services.ax25.kissAttach;
 
-  ax25ToolsPkg = cfg.package;
-
-  kissScript = pkgs.writeScript "kissScript" ''
-    #!${pkgs.runtimeShell}
-    # This daemons so we should be all set
-    ${ax25ToolsPkg}/bin/kissattach ${cfg.tty} ${cfg.port}
-    # Post start script instead
-    ${ax25ToolsPkg}/bin/kissparms -p ${cfg.port} ${cfg.extraKISSParams}
-  '';
 in
 {
 
@@ -50,23 +41,25 @@ in
 
       port = mkOption {
 				type = types.str;
-				default = "wl2k";
+				default = "tnc0";
       };
 
-      extraKISSParams = mkOption {
+      kissParams = mkOption {
 				type = types.str;
-				default = "-t 300 -l 10 -s 12 -r 80 -f n";
+				default = "";
+        example = "-t 300 -l 10 -s 12 -r 80 -f n";
       };
     };
   };
 
   config = mkIf cfg.enable {
     systemd.services.ax25-init = {
-      description = "AX.25 init KISS interface";
+      description = "AX.25 init kiss interface";
       after = [ "network.target" ];
       #serviceConfig.Type = "forking";
       serviceConfig.Type = "simple";
-      serviceConfig.ExecStart = "${kissScript}";
+      serviceConfig.ExecStart = "${cfg.package}/bin/kissattach ${cfg.tty} ${cfg.port}";
+      postStart = lib.optionalString (cfg.kissParams == "") "${cfg.package}/bin/kissparms -p ${cfg.port} ${cfg.kissParams}";
     };
   };
 }
