@@ -1044,6 +1044,7 @@
   ./services/networking/atticd.nix
   ./services/networking/autossh.nix
   ./services/networking/avahi-daemon.nix
+  ./services/networking/ax25-kissattach.nix
   ./services/networking/babeld.nix
   ./services/networking/bee.nix
   ./services/networking/biboumi.nix
