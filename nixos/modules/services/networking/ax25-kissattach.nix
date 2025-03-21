@@ -53,13 +53,13 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.services.ax25-init = {
-      description = "AX.25 init kiss interface";
+    systemd.services.ax25-attach = {
+      description = "AX.25 attach kiss interface";
       after = [ "network.target" ];
       #serviceConfig.Type = "forking";
       serviceConfig.Type = "simple";
       serviceConfig.ExecStart = "${cfg.package}/bin/kissattach ${cfg.tty} ${cfg.port}";
-      postStart = lib.optionalString (cfg.kissParams == "") "${cfg.package}/bin/kissparms -p ${cfg.port} ${cfg.kissParams}";
+      postStart = lib.optionalString (cfg.kissParams != "") "${cfg.package}/bin/kissparms -p ${cfg.port} ${cfg.kissParams}";
     };
   };
 }

@@ -3,6 +3,7 @@ import ./make-test-python.nix (
 let
   createAX25Node = nodeId: {
       boot.kernelPackages = pkgs.linuxPackages_ham;
+      boot.kernelModules = [ "ax25" ];
       # TODO
       #DISABLE FIREWALL
       networking.firewall.enable = false;
@@ -18,13 +19,13 @@ let
         text = ''
           # me callsign speed paclen window description
           #
-          wl2k nocall-${toString nodeId} 57600 255 7 Winlink
+          tnc0 nocall-${toString nodeId} 57600 255 7 Winlink
         '';
 
         # The UNIX file mode bits
         mode = "0644";
       };
-      services.ax25-init = {
+      services.ax25.kissAttach = {
         enable = true;
       };
     };
@@ -43,17 +44,18 @@ in
       node1.wait_for_unit("network.target")
       node1.execute("socat-broker.sh tcp4-listen:1234 >&2 &")
       node1.succeed("pgrep socat-broker.sh")
-      node1.execute("socat -d -d tcp:127.0.0.1:1234 pty,link=/dev/ninotnc,b57600,raw >&2 &")
+      node1.execute("socat -d -d tcp:127.0.0.1:1234 pty,link=/dev/ttyACM0,b57600,raw >&2 &")
       node1.succeed("pgrep socat")
-      node1.succeed("systemctl restart ax25d.service")
+      node1.succeed("systemctl cat ax25-attach.service")
+      node1.succeed("systemctl restart ax25-attach.service")
       node2.wait_for_unit("network.target")
-      node2.execute("socat -d -d pty,link=/dev/ninotnc,b57600,raw tcp:192.168.1.1:1234 >&2 &")
+      node2.execute("socat -d -d pty,link=/dev/ttyACM0,b57600,raw tcp:192.168.1.1:1234 >&2 &")
       node2.succeed("pgrep socat")
-      node2.succeed("systemctl restart ax25d.service")
+      node2.succeed("systemctl restart ax25-attach.service")
       node3.wait_for_unit("network.target")
-      node3.execute("socat -d -d pty,link=/dev/ninotnc,b57600,raw tcp:192.168.1.1:1234 >&2 &")
+      node3.execute("socat -d -d pty,link=/dev/ttyACM0,b57600,raw tcp:192.168.1.1:1234 >&2 &")
       node3.succeed("pgrep socat")
-      node3.succeed("systemctl restart ax25d.service")
+      node3.succeed("systemctl restart ax25-attach.service")
     '';
 
 }

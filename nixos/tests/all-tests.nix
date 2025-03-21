@@ -188,7 +188,7 @@ in {
   atop = handleTest ./atop.nix {};
   atticd = runTest ./atticd.nix;
   atuin = runTest ./atuin.nix;
-  ax25 = runTest ./ax25.nix;
+  ax25 = handleTest ./ax25.nix {} ;
   audiobookshelf = runTest ./audiobookshelf.nix;
   auth-mysql = runTest ./auth-mysql.nix;
   authelia = runTest ./authelia.nix;
