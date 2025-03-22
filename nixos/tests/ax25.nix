@@ -12,7 +12,7 @@ let
         ax25-tools
         ax25-apps
         socat
-        tncattach
+        #tncattach
       ];
       #systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
       environment.etc."ax25/axports" = {
@@ -28,6 +28,41 @@ let
       services.ax25.kissAttach = {
         enable = true;
       };
+      services.ax25.axlisten = {
+        enable = true;
+      };
+      # services.ax25-mock-ether.enable = true;
+      # services.ax25-mock-hardware.enable = true;
+
+      systemd.services.ax25-mock-ether =
+      {
+        description = "mock radio ether";
+        wantedBy = [ "default.target" ];
+        requires = [ "network.target" ];
+        before = [ "ax25-mock-hardware.service" ];
+        # broken needs access to "ss" or "netstat"
+        path = [ pkgs.iproute2 ];
+        # environment = {
+        #   PATH="${pkgs.iproute2}/bin";
+        # };
+        serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.socat}/bin/socat-broker.sh tcp4-listen:1234";
+        };
+        postStart = "${pkgs.coreutils}/bin/sleep 2";
+      };
+      systemd.services.ax25-mock-hardware =
+      {
+        description = "mock AX.25 TNC and Radio";
+        wantedBy = [ "default.target" ];
+        #after = [ "network.target" ];
+        requires = [ "network.target" "ax25-mock-ether.service" ];
+        before = [ "ax25-attach.service" ];
+        serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.socat}/bin/socat -d -d tcp:192.168.1.1:1234 pty,link=/dev/ttyACM0,b57600,raw";
+        };
+      };
     };
 in
 {
@@ -42,20 +77,12 @@ in
       start_all()
       node1.succeed("lsmod | grep ax25")
       node1.wait_for_unit("network.target")
-      node1.execute("socat-broker.sh tcp4-listen:1234 >&2 &")
       node1.succeed("pgrep socat-broker.sh")
-      node1.execute("socat -d -d tcp:127.0.0.1:1234 pty,link=/dev/ttyACM0,b57600,raw >&2 &")
       node1.succeed("pgrep socat")
-      node1.succeed("systemctl cat ax25-attach.service")
-      node1.succeed("systemctl restart ax25-attach.service")
       node2.wait_for_unit("network.target")
-      node2.execute("socat -d -d pty,link=/dev/ttyACM0,b57600,raw tcp:192.168.1.1:1234 >&2 &")
       node2.succeed("pgrep socat")
-      node2.succeed("systemctl restart ax25-attach.service")
       node3.wait_for_unit("network.target")
-      node3.execute("socat -d -d pty,link=/dev/ttyACM0,b57600,raw tcp:192.168.1.1:1234 >&2 &")
       node3.succeed("pgrep socat")
-      node3.succeed("systemctl restart ax25-attach.service")
     '';
 
 }
