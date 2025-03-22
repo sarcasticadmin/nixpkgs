@@ -15,7 +15,7 @@ let
     mkOption
     ;
 
-  cfg = config.services.axlisten;
+  cfg = config.services.ax25.axlisten;
 in
 {
   options = {
