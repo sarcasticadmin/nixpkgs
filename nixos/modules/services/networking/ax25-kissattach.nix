@@ -6,6 +6,10 @@ let
     types
     ;
 
+  inherit (lib.strings)
+    removePrefix
+    ;
+
   inherit (lib.modules)
     mkIf
     ;
@@ -55,9 +59,11 @@ in
   config = mkIf cfg.enable {
     systemd.services.ax25-attach = {
       description = "AX.25 attach kiss interface";
-      after = [ "network.target" ];
-      #serviceConfig.Type = "forking";
-      serviceConfig.Type = "simple";
+      wantedBy = [ "multi-user.target" ];
+      #after = [ "network.target" ];
+      #after = [ "dev-${ttyName}.device" ];
+      #bindsTo = [ "dev-${ttyName}.device" ];
+      serviceConfig.Type = "exec";
       serviceConfig.ExecStart = "${cfg.package}/bin/kissattach ${cfg.tty} ${cfg.port}";
       postStart = lib.optionalString (cfg.kissParams != "") "${cfg.package}/bin/kissparms -p ${cfg.port} ${cfg.kissParams}";
     };
