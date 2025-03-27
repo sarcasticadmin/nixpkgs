@@ -3,6 +3,7 @@ import ./make-test-python.nix (
 let
 
   baud = 57600;
+  tty = "/dev/ttyACM0";
   createAX25Node = nodeId: {
       boot.kernelPackages = pkgs.linuxPackages_ham;
       boot.kernelModules = [ "ax25" ];
@@ -16,7 +17,7 @@ let
         socat
       ];
       services.ax25.kissAttach = {
-        inherit baud;
+        inherit baud tty;
         enable = true;
         callsign = "nocall-${toString nodeId}";
         description = "mocked tnc";
@@ -48,7 +49,7 @@ let
         requires = [ "network.target" "ax25-mock-ether.service" ];
         serviceConfig = {
           Type = "exec";
-          ExecStart = "${pkgs.socat}/bin/socat -d -d tcp:192.168.1.1:1234 pty,link=/dev/ttyACM0,b${toString baud},raw";
+          ExecStart = "${pkgs.socat}/bin/socat -d -d tcp:192.168.1.1:1234 pty,link=${tty},b${toString baud},raw";
         };
       };
     };
