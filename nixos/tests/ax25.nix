@@ -1,6 +1,7 @@
 import ./make-test-python.nix (
 { pkgs, lib, ... }:
 let
+
   createAX25Node = nodeId: {
       boot.kernelPackages = pkgs.linuxPackages_ham;
       boot.kernelModules = [ "ax25" ];
@@ -12,9 +13,7 @@ let
         ax25-tools
         ax25-apps
         socat
-        #tncattach
       ];
-      #systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
       environment.etc."ax25/axports" = {
         text = ''
           # me callsign speed paclen window description
@@ -31,8 +30,6 @@ let
       services.ax25.axlisten = {
         enable = true;
       };
-      # services.ax25-mock-ether.enable = true;
-      # services.ax25-mock-hardware.enable = true;
 
       systemd.services.ax25-mock-ether =
       {
@@ -42,11 +39,8 @@ let
         before = [ "ax25-mock-hardware.service" ];
         # broken needs access to "ss" or "netstat"
         path = [ pkgs.iproute2 ];
-        # environment = {
-        #   PATH="${pkgs.iproute2}/bin";
-        # };
         serviceConfig = {
-          Type = "simple";
+          Type = "exec";
           ExecStart = "${pkgs.socat}/bin/socat-broker.sh tcp4-listen:1234";
         };
         postStart = "${pkgs.coreutils}/bin/sleep 2";
@@ -55,11 +49,11 @@ let
       {
         description = "mock AX.25 TNC and Radio";
         wantedBy = [ "default.target" ];
+        before = [ "ax25-attach.service" "axlisten.service" ];
         #after = [ "network.target" ];
         requires = [ "network.target" "ax25-mock-ether.service" ];
-        before = [ "ax25-attach.service" ];
         serviceConfig = {
-          Type = "simple";
+          Type = "exec";
           ExecStart = "${pkgs.socat}/bin/socat -d -d tcp:192.168.1.1:1234 pty,link=/dev/ttyACM0,b57600,raw";
         };
       };
