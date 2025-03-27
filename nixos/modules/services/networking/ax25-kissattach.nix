@@ -54,7 +54,8 @@ in
 
       description = mkOption {
 				type = types.str;
-        default = "";
+        # This cannot be empty for some ax25 tools cant parse /etc/ax25/axports
+        default = "NixOS managed TNC";
       };
 
       baud = mkOption {
