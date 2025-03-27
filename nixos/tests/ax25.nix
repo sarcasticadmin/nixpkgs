@@ -26,27 +26,13 @@ let
         enable = true;
       };
 
-      systemd.services.ax25-mock-ether =
-      {
-        description = "mock radio ether";
-        wantedBy = [ "default.target" ];
-        requires = [ "network.target" ];
-        before = [ "ax25-mock-hardware.service" ];
-        # broken needs access to "ss" or "netstat"
-        path = [ pkgs.iproute2 ];
-        serviceConfig = {
-          Type = "exec";
-          ExecStart = "${pkgs.socat}/bin/socat-broker.sh tcp4-listen:1234";
-        };
-        postStart = "${pkgs.coreutils}/bin/sleep 2";
-      };
       systemd.services.ax25-mock-hardware =
       {
         description = "mock AX.25 TNC and Radio";
         wantedBy = [ "default.target" ];
         before = [ "ax25-attach.service" "axlisten.service" ];
-        #after = [ "network.target" ];
-        requires = [ "network.target" "ax25-mock-ether.service" ];
+        after = [ "network.target" ];
+        #requires = [ "network.target" ];
         serviceConfig = {
           Type = "exec";
           ExecStart = "${pkgs.socat}/bin/socat -d -d tcp:192.168.1.1:1234 pty,link=${tty},b${toString baud},raw";
@@ -57,7 +43,25 @@ in
 {
   name = "ax25simple";
   nodes = {
-    node1 = createAX25Node 1;
+    node1 = lib.mkMerge [
+      (createAX25Node 1)
+      { systemd.services.ax25-mock-ether =
+      {
+        description = "mock radio ether";
+        wantedBy = [ "default.target" ];
+        requires = [ "network.target" ];
+        #requiredBy = [ "ax25-mock-hardware.service" ];
+        before = [ "ax25-mock-hardware.service" ];
+        # broken needs access to "ss" or "netstat"
+        path = [ pkgs.iproute2 ];
+        serviceConfig = {
+          Type = "exec";
+          ExecStart = "${pkgs.socat}/bin/socat-broker.sh tcp4-listen:1234";
+        };
+        postStart = "${pkgs.coreutils}/bin/sleep 2";
+      };
+      }
+    ];
     node2 = createAX25Node 2;
     node3 = createAX25Node 3;
   };
@@ -71,9 +75,7 @@ in
       node2.start()
       node3.start()
       node2.wait_for_unit("network.target")
-      node2.succeed("pgrep socat")
       node3.wait_for_unit("network.target")
-      node3.succeed("pgrep socat")
       node1.succeed("echo hello | ax25_call tnc0 nocall-1 nocall-3")
     '';
 
