@@ -44,9 +44,10 @@ in
     systemd.services.axlisten =
       {
         description = "AX.25 traffic monitor";
-        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
+        after = [ "ax25-attach.service" ];
         serviceConfig = {
-          Type = "simple";
+          Type = "exec";
           ExecStart = "${cfg.package}/bin/axlisten ${cfg.config}";
         };
       };
