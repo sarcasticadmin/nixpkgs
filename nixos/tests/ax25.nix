@@ -2,6 +2,7 @@ import ./make-test-python.nix (
 { pkgs, lib, ... }:
 let
 
+  baud = 57600;
   createAX25Node = nodeId: {
       boot.kernelPackages = pkgs.linuxPackages_ham;
       boot.kernelModules = [ "ax25" ];
@@ -14,18 +15,11 @@ let
         ax25-apps
         socat
       ];
-      environment.etc."ax25/axports" = {
-        text = ''
-          # me callsign speed paclen window description
-          #
-          tnc0 nocall-${toString nodeId} 57600 255 7 Winlink
-        '';
-
-        # The UNIX file mode bits
-        mode = "0644";
-      };
       services.ax25.kissAttach = {
+        inherit baud;
         enable = true;
+        callsign = "nocall-${toString nodeId}";
+        description = "mocked tnc";
       };
       services.ax25.axlisten = {
         enable = true;
@@ -54,7 +48,7 @@ let
         requires = [ "network.target" "ax25-mock-ether.service" ];
         serviceConfig = {
           Type = "exec";
-          ExecStart = "${pkgs.socat}/bin/socat -d -d tcp:192.168.1.1:1234 pty,link=/dev/ttyACM0,b57600,raw";
+          ExecStart = "${pkgs.socat}/bin/socat -d -d tcp:192.168.1.1:1234 pty,link=/dev/ttyACM0,b${toString baud},raw";
         };
       };
     };
