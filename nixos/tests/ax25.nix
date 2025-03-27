@@ -68,15 +68,18 @@ in
   };
   testScript = { nodes, ... }:
     ''
-      start_all()
+      node1.start()
       node1.succeed("lsmod | grep ax25")
       node1.wait_for_unit("network.target")
       node1.succeed("pgrep socat-broker.sh")
       node1.succeed("pgrep socat")
+      node2.start()
+      node3.start()
       node2.wait_for_unit("network.target")
       node2.succeed("pgrep socat")
       node3.wait_for_unit("network.target")
       node3.succeed("pgrep socat")
+      node1.succeed("echo hello | ax25_call tnc0 nocall-1 nocall-3")
     '';
 
 }
