@@ -1080,6 +1080,7 @@
   ./services/networking/atticd.nix
   ./services/networking/autossh.nix
   ./services/networking/avahi-daemon.nix
+  ./services/networking/ax25/mheard.nix
   ./services/networking/ax25/axlisten.nix
   ./services/networking/ax25/axports.nix
   ./services/networking/babeld.nix
