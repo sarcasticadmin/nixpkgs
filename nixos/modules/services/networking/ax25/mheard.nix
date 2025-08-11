@@ -31,7 +31,7 @@ in
 
       package = mkOption {
         type = types.package;
-        default = pkgs.ax25-apps;
+        default = pkgs.ax25-tools;
         defaultText = literalExpression "pkgs.ax25-tools";
         description = "The ax25-tools package to use.";
       };
@@ -68,6 +68,7 @@ in
       serviceConfig = {
         Type = "exec";
         ExecStart = "${cfg.package}/bin/mheardd ${cfg.config}";
+        StateDirectory = "ax25/mheard";
       };
     };
   };
