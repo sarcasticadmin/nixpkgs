@@ -34,7 +34,7 @@ let
       };
     };
 
-    # All mocks radios will connect back to socat-broker on node 1 in order to get
+    # Each mock radio will connect back to socat-broker on node 1 in order to get
     # all messages that are "broadcasted over the ether"
     systemd.services.ax25-mock-hardware = {
       description = "mock AX.25 TNC and Radio";
@@ -91,7 +91,7 @@ in
         for peer in peers:
           peerId = peer[-1]
           packets = m.succeed(f"mheard | grep -i NOCALL-{peerId}" + " | awk '{ print $3 }'")
-          assert int(packets) == 10
+          assert int(packets) == len(peers) * 5
 
       # start the first node since the socat-broker needs to be running
       node1.start()
