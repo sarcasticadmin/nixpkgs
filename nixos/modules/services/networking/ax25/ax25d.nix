@@ -71,7 +71,7 @@ in
       requires = [ "ax25-axports.target" ];
       serviceConfig = {
         Type = "exec";
-        ExecStart = "${cfg.package}/bin/ax25d -c ${cfg.configFile}";
+        ExecStart = "${cfg.package}/bin/ax25d -c ${cfg.configFile} -l";
       };
     };
   };

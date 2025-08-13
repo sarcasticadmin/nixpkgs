@@ -26,6 +26,14 @@ let
     };
 
     services.ax25 = {
+      ax25d = {
+        enable = true;
+        configFile = pkgs.writeText "ax25d.conf" ''
+          [tnc0]
+          parameters      7   4   *  *  *  *  *
+          default         7   2   2  60  300  5  -   root ${pkgs.fortune}/bin/fortune fortune
+        '';
+      };
       axlisten = {
         enable = true;
       };
