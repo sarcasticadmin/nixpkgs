@@ -44,11 +44,18 @@ stdenv.mkDerivation (finalAttrs: {
   # to copy the built assets explicitly.
   # https://github.com/JS8Call-improved/JS8Call-improved/issues/115
   installPhase = ''
+    runHook preInstall
     mkdir -p $out/bin $out/share/doc/js8call $out/share/icons/hicolor/128x128/apps $out/share/applications
-    cp JS8Call $out/bin/
+    cp JS8Call $out/bin/js8call
     cp ../LICENSE ../README.md $out/share/doc/js8call
     cp ../artwork/js8call_icon.png $out/share/icons/hicolor/128x128/apps
     cp ../JS8Call.desktop $out/share/applications
+    runHook postInstall
+  '';
+
+  postInstall = ''
+    substituteInPlace $out/share/applications/JS8Call.desktop \
+      --replace-fail "Exec=JS8Call" "Exec=js8call"
   '';
 
   meta = {
